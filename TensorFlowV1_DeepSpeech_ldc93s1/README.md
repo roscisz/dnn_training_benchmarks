@@ -8,16 +8,14 @@ implementation in TensorFlow that supports distributed training using Distribute
 
 ## Table of contents
 - [x] [Installation instructions](#installation)
-- [ ] [Instructions for running the benchmarks](#running-the-benchmarks)
+- [x] [Instructions for running the benchmarks](#running-the-benchmarks)
   - [x] [Manually](#manually)
   - [x] [Using run_cluster.sh](#run-clustersh)
   - [x] [Using Docker](#docker)
   - [x] [Using Kubernetes](#kubernetes)
-  - [ ] [Using TensorHive](#tensorhive)
-- [ ] [Experimental results](#experimental-results):
+- [x] [Experimental results](#experimental-results):
   - [x] [Batch size influence on training performance on various GPUs](#batch-size)
   - [x] [Scalability on multiple GPUs](#multigpu-scalability)
-  - [ ] Scalability in a distributed setting
 
 ## Installation
 
@@ -167,8 +165,6 @@ our training to GPU number 3 we would have to set GPUs limit to 4 and set CVD to
 are on a single node. If they would be on different ones we could use
 [node labels and selectors](https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/).
 
-
-### TensorHive
 
 ## Experimental results
 
