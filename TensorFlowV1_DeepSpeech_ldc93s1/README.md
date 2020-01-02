@@ -1,5 +1,7 @@
 # DeepSpeech benchmarks
 
+Last time we checked if it still works: ![](https://img.shields.io/date/1577971959) ![](https://img.shields.io/badge/platform-x86_64-blue.svg)
+
 In this example we provide experimental results and steps to reproduce for benchmarking performance of training the
 [Baidu's Deep Speech](https://arxiv.org/abs/1412.5567) Recurrent Neural Network for automatic speech recognition.
 
@@ -26,7 +28,7 @@ For detailed instructions for running the DeepSpeech training go to the
 ### Prerequisites
 
 * GNU/Linux
-* Python 3, Pip3, git, wget
+* Python 3.6, Pip, git, wget
 * CUDA 9.0 with CuDNN 7
 * TensorFlow 1.6.0
 * Python packages: pandas, python_speech_features, pyxdg, progressbar2
@@ -37,8 +39,13 @@ The environment can be for example set up using nvidia-docker as follows:
 nvidia-docker pull nvidia/cuda:9.0-cudnn7-devel
 nvidia-docker run -it nvidia/cuda:9.0-cudnn7-devel
 apt-get update
-apt-get install -y python3 python3-pip git wget
-pip3 install 'tensorflow-gpu==1.6.0' pandas python_speech_features pyxdg progressbar2 scipy
+apt-get install -y git wget software-properties-common virtualenv
+add-apt-repository ppa:deadsnakes/ppa
+apt-get update
+apt-get install -y python3.6 python3-pip
+virtualenv -p python3.6 venv
+source venv/bin/activate
+pip install 'tensorflow-gpu==1.6.0' pandas python_speech_features pyxdg progressbar2 scipy
 ```
 
 ### Installing DeepSpeech
@@ -52,19 +59,33 @@ git reset --hard e00bfd0f413912855eb2312bc1efe3bd2b023b25
 Note: if you have git-lfs installed, you can disable it for the benchmarks using environment variable GIT_LFS_SKIP_SMUDGE=1.
 
 **Download native libraries**
+
 ```bash
-python3 util/taskcluster.py --arch gpu --target native_client/ --branch=v0.2.0
+OBSOLETE: python util/taskcluster.py --arch gpu --target native_client/ --branch=v0.2.0
 ```
+
+NOTE: Unfortunately, Mozilla servers do not host native client binaries
+for v0.2.0 any more. We provide a mirror of the x86-64 binaries
+used in our experiments:
+
+```bash
+cd native_client/
+wget https://github.com/roscisz/dnn_training_benchmarks/raw/master/TensorFlowV1_DeepSpeech_ldc93s1/native_client.tar.xz
+tar xf native_client.tar.xz
+cd ..
+```
+
+Alternatively, see Dockerfile for instructions how to build the native client libraries.
 
 **Download small dataset**
 ```bash
-python3 bin/import_ldc93s1.py ldc93s1
+python bin/import_ldc93s1.py ldc93s1
 ```
 
 ### Applying the benchmarking patch
 
 ```bash
-wget https://raw.githubusercontent.com/roscisz/TensorHive/master/examples/deepspeech/deepspeech_benchmarking.patch
+wget https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_DeepSpeech_ldc93s1/deepspeech_benchmarking.patch
 git apply deepspeech_benchmarking.patch
 ```
 
@@ -78,7 +99,7 @@ assuming that the DeepSpeech training program is installed and the benchmarking 
 To run the benchmark, specify the number of "global steps" to be benchmarked using the `benchmark_steps` parameter:
 
 ```bash
-LD_LIBRARY_PATH=native_client/ CUDA_VISIBLE_DEVICES=0 python3 ./DeepSpeech.py --train_files=ldc93s1/ldc93s1.csv --dev_files=ldc93s1/ldc93s1.csv --test_files=ldc93s1/ldc93s1.csv --log_level=3 --benchmark_steps=10
+LD_LIBRARY_PATH=native_client/ CUDA_VISIBLE_DEVICES=0 python ./DeepSpeech.py --train_files=ldc93s1/ldc93s1.csv --dev_files=ldc93s1/ldc93s1.csv --test_files=ldc93s1/ldc93s1.csv --log_level=3 --benchmark_steps=10
 ```
 
 **Testing batch size on one GPU**
@@ -86,7 +107,7 @@ LD_LIBRARY_PATH=native_client/ CUDA_VISIBLE_DEVICES=0 python3 ./DeepSpeech.py --
 To check the performance for various batch sizes, modify the `train_batch_size` parameter. For example, to use batch size of 128 run:
 
 ```bash
-LD_LIBRARY_PATH=native_client/ CUDA_VISIBLE_DEVICES=0 python3 ./DeepSpeech.py --train_files=ldc93s1/ldc93s1.csv --dev_files=ldc93s1/ldc93s1.csv --test_files=ldc93s1/ldc93s1.csv --log_level=3 --benchmark_steps=10 --train_batch_size=128
+LD_LIBRARY_PATH=native_client/ CUDA_VISIBLE_DEVICES=0 python ./DeepSpeech.py --train_files=ldc93s1/ldc93s1.csv --dev_files=ldc93s1/ldc93s1.csv --test_files=ldc93s1/ldc93s1.csv --log_level=3 --benchmark_steps=10 --train_batch_size=128
 ```
 **Testing scalability on many GPUs**
 
@@ -109,7 +130,7 @@ For example, running our benchmark on the distributed training
 application using 1 parameter server and 4 workers using 1 GPU each would require executing the following command:
 
 ```bash
-LD_LIBRARY_PATH=native_client/ bin/run-cluster.sh 1:4:1 --script="python3 DeepSpeech.py" --train_files=ldc93s1/ldc93s1.csv --dev_files=ldc93s1/ldc93s1.csv --test_files=ldc93s1/ldc93s1.csv --train_batch_size=64 --epoch=1000 --benchmark_warmup_steps=10 --benchmark_steps=10 --log_level=3 --noshow_progressbar
+LD_LIBRARY_PATH=native_client/ bin/run-cluster.sh 1:4:1 --script="python DeepSpeech.py" --train_files=ldc93s1/ldc93s1.csv --dev_files=ldc93s1/ldc93s1.csv --test_files=ldc93s1/ldc93s1.csv --train_batch_size=64 --epoch=1000 --benchmark_warmup_steps=10 --benchmark_steps=10 --log_level=3 --noshow_progressbar
 ```
 
 It should be noted that the distributed training introduces a startup overhead, so increasing the number of
@@ -136,7 +157,7 @@ Now, the benchmark can be executed in a Docker container, so that no dependencie
 on the host machine: 
  
 ```bash
-docker run deepspeech python3 ./DeepSpeech.py --train_files=ldc93s1/ldc93s1.csv --dev_files=ldc93s1/ldc93s1.csv --test_files=ldc93s1/ldc93s1.csv --log_level=3 --benchmark_steps=10 --train_batch_size=128
+docker run deepspeech python ./DeepSpeech.py --train_files=ldc93s1/ldc93s1.csv --dev_files=ldc93s1/ldc93s1.csv --test_files=ldc93s1/ldc93s1.csv --log_level=3 --benchmark_steps=10 --train_batch_size=128
 ```
 
 
