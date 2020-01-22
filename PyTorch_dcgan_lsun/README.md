@@ -80,37 +80,8 @@ export GLOO_SOCKET_IFNAME=eth0
 ```
 
 ```
-usage: main.py [-h] --dataset DATASET --dataroot DATAROOT [--workers WORKERS]
-               [--batchSize BATCHSIZE] [--imageSize IMAGESIZE] [--nz NZ]
-               [--ngf NGF] [--ndf NDF] [--niter NITER] [--lr LR]
-               [--beta1 BETA1] [--cuda] [--ngpu NGPU] [--netG NETG]
-               [--netD NETD]
+CUDA_VISIBLE_DEVICES=0 python main.py --init-method tcp://127.0.0.1:20011 --rank 0 --world 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
+CUDA_VISIBLE_DEVICES=1 python main.py --init-method tcp://127.0.0.1:20011 --rank 1 --world 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
 
-distributed arguments:
-  --init-method metod,addr, and port to communicate between the nodes [tcp://127.0.0.1:20010]
-  --rank current process id
-  --world-size number of processes 
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --dataset DATASET     cifar10 | lsun | mnist |imagenet | folder | lfw | fake
-  --dataroot DATAROOT   path to dataset
-  --workers WORKERS     number of data loading workers
-  --batchSize BATCHSIZE input batch size
-  --imageSize IMAGESIZE the height / width of the input image to network
-  --nz NZ               size of the latent z vector
-  --ngf NGF
-  --ndf NDF
-  --niter NITER         number of epochs to train for
-  --lr LR               learning rate, default=0.0002
-  --beta1 BETA1         beta1 for adam. default=0.5
-  --cuda                enables cuda
-  --ngpu NGPU           number of GPUs to use
-  --netG NETG           path to netG (to continue training)
-  --netD NETD           path to netD (to continue training)
-  --outf OUTF           folder to output images and model checkpoints
-  --manualSeed SEED     manual seed
-  --classes CLASSES     comma separated list of classes for the lsun data set
-
-
+For more details about the usage refer to the [original repo](https://github.com/pytorch/examples/tree/master/dcgan)
 ```
