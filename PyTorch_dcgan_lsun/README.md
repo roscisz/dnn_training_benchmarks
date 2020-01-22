@@ -26,52 +26,15 @@ That's it. After that you just control which GPUs you would like your code to ru
 
 ### Distributed
 
-There is not that much more to do in this case.
+To make the code distributed apply provided patch by running:
 
 ```
-from torch import distributed, nn
-
-
-<argument parser>
-
-parser.add_argument('--backend', type=str, default='gloo', help='Name of the backend to use.')
-parser.add_argument(
-    '-i',
-    '--init-method',
-    type=str,
-    default='tcp://127.0.0.1:23456',
-    help='URL specifying how to initialize the package.')
-parser.add_argument('-s', '--world-size', type=int, default=1, help='Number of processes participating in the job.')
-parser.add_argument('-r', '--rank', type=int, default=0, help='Rank of the current process.')
-
-
-if opt.world_size > 1:
-        distributed.init_process_group(
-            backend=opt.backend,
-            init_method=opt.init_method,
-            world_size=opt.world_size,
-            rank=opt.rank,
-        )
-
-
-<code with model creation, in this case Generator is called netG>
-netG = nn.parallel.DistributedDataParallel(netG)
-
-<another model creation in this case discriminator called netD>
-netD = nn.parallel.DistributedDataParallel(netD)
+git apply distributed.patch
 ```
 
-That is basically it.
-Although for it to make sense you need to make your sampler distributed too.
+You might want to checkout commit 0c1654d6913f77f09c0505fb284d977d89c17c1a to make sure there are no conflicts before applying the patch.
 
-```
-
-from torch.utils import data
-
-<sampler creation>
-sampler = data.DistributedSampler(dataset)
-```
-
+To learn how to easily adapt PyTorch code for distributed learning please examine the patch. 
 
 ## Usage
 ```
