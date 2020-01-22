@@ -9,14 +9,14 @@ import numpy as np
 import tensorflow.keras.layers as layers
 from tqdm import tqdm
 from random import random
+from absl import app, flags
 
+FLAGS = flags.FLAGS
 
-BATCH_SIZE = 32
-NUM_EXAMPLES = 3
+flags.DEFINE_integer('batch_size', 32, 'Batch size', lower_bound=0)
+flags.DEFINE_integer('epochs', 10, 'Number of epochs', lower_bound=0)
+
 NOISE_DIM = 32
-
-
-tf.__version__
 
 
 #Function for reshaping images into the multiple resolutions we will use
@@ -40,15 +40,6 @@ def mnist_dataset(batch_size):
     dataset = dataset.batch(batch_size, drop_remainder=True)
     dataset = dataset.prefetch(1)
     return dataset
-
-
-strategy = tf.distribute.experimental.MultiWorkerMirroredStrategy()
-NUM_DEVICES = strategy.num_replicas_in_sync
-print(NUM_DEVICES)
-
-dataset =  mnist_dataset(NUM_DEVICES * BATCH_SIZE)
-dataset_distr = strategy.experimental_distribute_dataset(dataset)
-print(dataset_distr)
 
 
 def generator_model():
@@ -122,69 +113,77 @@ def discriminator_model():
     return model
 
 
-# create the models and optimizers for later functions
-with strategy.scope():
-    generator = generator_model()
-    discriminator = discriminator_model()
-    generator_optimizer = tf.keras.optimizers.Adam(1e-3)
-    discriminator_optimizer = tf.keras.optimizers.Adam(1e-3)
+def main(argv):
+    strategy = tf.distribute.experimental.MultiWorkerMirroredStrategy()
+    NUM_DEVICES = strategy.num_replicas_in_sync
+    print('Devices: {}'.format(NUM_DEVICES))
 
-    # prediction of 0 = fake, 1 = real
-    #@tf.function
-    def discriminator_loss(real_output, fake_output):
-        real_loss = tf.nn.sigmoid_cross_entropy_with_logits(
-            tf.ones_like(real_output), real_output)
-        fake_loss = tf.nn.sigmoid_cross_entropy_with_logits(
-            tf.zeros_like(fake_output), fake_output)
-        return tf.nn.compute_average_loss(real_loss + fake_loss)
+    dataset = mnist_dataset(NUM_DEVICES * FLAGS.batch_size)
+    dataset_distr = strategy.experimental_distribute_dataset(dataset)
 
-    #@tf.function
-    def generator_loss(fake_output):
-        loss = tf.nn.sigmoid_cross_entropy_with_logits(
-            tf.ones_like(fake_output), fake_output)
-        return tf.nn.compute_average_loss(loss)
+    # create the models and optimizers for later functions
+    with strategy.scope():
+        generator = generator_model()
+        discriminator = discriminator_model()
+        generator_optimizer = tf.keras.optimizers.Adam(1e-3)
+        discriminator_optimizer = tf.keras.optimizers.Adam(1e-3)
 
-    #@tf.function
-    def train_step(images):
-        noise = tf.random.normal([BATCH_SIZE, NOISE_DIM])
+        # prediction of 0 = fake, 1 = real
+        def discriminator_loss(real_output, fake_output):
+            real_loss = tf.nn.sigmoid_cross_entropy_with_logits(
+                tf.ones_like(real_output), real_output)
+            fake_loss = tf.nn.sigmoid_cross_entropy_with_logits(
+                tf.zeros_like(fake_output), fake_output)
+            return tf.nn.compute_average_loss(real_loss + fake_loss)
 
-        #gradient tapes keep track of all calculations done in scope and create the
-        #    gradients for these
-        with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-            generated_images = generator(noise, training=True)
-            real_output = discriminator(images, training=True)
-            fake_output = discriminator(generated_images, training=True)
+        def generator_loss(fake_output):
+            loss = tf.nn.sigmoid_cross_entropy_with_logits(
+                tf.ones_like(fake_output), fake_output)
+            return tf.nn.compute_average_loss(loss)
 
-            gen_loss = generator_loss(fake_output)
-            dis_loss = discriminator_loss(real_output, fake_output)
+        def train_step(images):
+            noise = tf.random.normal([FLAGS.batch_size, NOISE_DIM])
 
-        gradients_of_generator = gen_tape.gradient(gen_loss,
-            generator.trainable_variables)
-        gradients_of_discriminator = disc_tape.gradient(dis_loss,
-            discriminator.trainable_variables)
+            #gradient tapes keep track of all calculations done in scope and create the
+            #    gradients for these
+            with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+                generated_images = generator(noise, training=True)
+                real_output = discriminator(images, training=True)
+                fake_output = discriminator(generated_images, training=True)
 
-        generator_optimizer.apply_gradients(zip(gradients_of_generator,
-            generator.trainable_variables))
-        discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator,
-            discriminator.trainable_variables))
+                gen_loss = generator_loss(fake_output)
+                dis_loss = discriminator_loss(real_output, fake_output)
 
-        return gen_loss, dis_loss
+            gradients_of_generator = gen_tape.gradient(gen_loss,
+                generator.trainable_variables)
+            gradients_of_discriminator = disc_tape.gradient(dis_loss,
+                discriminator.trainable_variables)
 
-    @tf.function
-    def distributed_train(images):
-        gen_loss, dis_loss = strategy.experimental_run_v2(
-            # remove the tf functions decorator for train_step
-            train_step, args=(images,))
-        # this reduces the return losses onto one device
-        gen_loss = strategy.reduce(tf.distribute.ReduceOp.MEAN, gen_loss, axis=None)
-        dis_loss = strategy.reduce(tf.distribute.ReduceOp.MEAN, dis_loss, axis=None)
-        return gen_loss, dis_loss
+            generator_optimizer.apply_gradients(zip(gradients_of_generator,
+                generator.trainable_variables))
+            discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator,
+                discriminator.trainable_variables))
 
-    # also change train() to use distributed_train instead of train_step
-    def train(dataset, epochs):
-        for epoch in tqdm(range(epochs)):
-            for image_batch in dataset:
-                gen_loss, dis_loss = distributed_train(image_batch)
+            return gen_loss, dis_loss
+
+        @tf.function
+        def distributed_train(images):
+            gen_loss, dis_loss = strategy.experimental_run_v2(
+                # remove the tf functions decorator for train_step
+                train_step, args=(images,))
+            # this reduces the return losses onto one device
+            gen_loss = strategy.reduce(tf.distribute.ReduceOp.MEAN, gen_loss, axis=None)
+            dis_loss = strategy.reduce(tf.distribute.ReduceOp.MEAN, dis_loss, axis=None)
+            return gen_loss, dis_loss
+
+        # also change train() to use distributed_train instead of train_step
+        def train(dataset, epochs):
+            for epoch in tqdm(range(epochs)):
+                for image_batch in dataset:
+                    gen_loss, dis_loss = distributed_train(image_batch)
+
+        train(dataset_distr, FLAGS.epochs)
 
 
-    train(dataset_distr, 10)
+if __name__ == '__main__':
+    app.run(main)
