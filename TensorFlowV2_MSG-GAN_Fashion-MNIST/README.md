@@ -4,7 +4,8 @@ Last time we checked if it still works: ![](https://img.shields.io/date/15797787
 
 
 This example, based on the [TensorFlow 2.0 in Action blogpost](https://blog.paperspace.com/tensorflow-2-0-in-practice/),
-utilizes the [tf.distribute.Strategy] API. The example is easy to run, because it uses the Fashion-MNIST dataset easily
+utilizes the [tf.distribute.Strategy](https://www.tensorflow.org/api_docs/python/tf/distribute/Strategy) API.
+The example is easy to run, because it uses the Fashion-MNIST dataset easily
 available through keras API. At the same time it has benchmarking potential, as it trains a model belonging to the
 computationally expensive GAN class.
 
@@ -68,7 +69,7 @@ orchestration of the tasks on multiple nodes, as presented [here](https://github
 
 In this section we present performance results of the benchmark application
 on a cluster with 16 nodes, each equipped with two Intel(R) Xeon(R) CPU E5-2670 v3 @ 2.30GHz
-CPUs.
+CPUs. Each value in the results has been averaged over three runs.
 
 #### Multi-node scalability
 ![scalability32](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV2_MSG-GAN_Fashion-MNIST/img/scalability32.png)
