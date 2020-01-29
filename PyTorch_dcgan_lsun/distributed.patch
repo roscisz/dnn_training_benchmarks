@@ -1,5 +1,5 @@
 diff --git a/dcgan/main.py b/dcgan/main.py
-index 9d5369c..d3cce15 100644
+index 9d5369c..4353858 100644
 --- a/dcgan/main.py
 +++ b/dcgan/main.py
 @@ -3,7 +3,6 @@ import argparse
@@ -10,7 +10,7 @@ index 9d5369c..d3cce15 100644
  import torch.nn.parallel
  import torch.backends.cudnn as cudnn
  import torch.optim as optim
-@@ -11,9 +10,19 @@ import torch.utils.data
+@@ -11,11 +10,21 @@ import torch.utils.data
  import torchvision.datasets as dset
  import torchvision.transforms as transforms
  import torchvision.utils as vutils
@@ -28,8 +28,11 @@ index 9d5369c..d3cce15 100644
 +parser.add_argument('-s', '--world-size', type=int, default=1, help='Number of processes participating in the job.')
 +parser.add_argument('-r', '--rank', type=int, default=0, help='Rank of the current process.')
  parser.add_argument('--dataset', required=True, help='cifar10 | lsun | mnist |imagenet | folder | lfw | fake')
- parser.add_argument('--dataroot', required=True, help='path to dataset')
+-parser.add_argument('--dataroot', required=True, help='path to dataset')
++parser.add_argument('--dataroot', required=False, help='path to dataset')
  parser.add_argument('--workers', type=int, help='number of data loading workers', default=2)
+ parser.add_argument('--batchSize', type=int, default=64, help='input batch size')
+ parser.add_argument('--imageSize', type=int, default=64, help='the height / width of the input image to network')
 @@ -36,6 +45,14 @@ parser.add_argument('--classes', default='bedroom', help='comma separated list o
  opt = parser.parse_args()
  print(opt)

@@ -1,13 +1,27 @@
 # PyTorch - DCGAN
 
 This example is based on [this implementation](https://github.com/pytorch/examples/tree/master/dcgan)
-
+```
+git clone https://github.com/pytorch/examples.git
+```
 
 ## Downloading the dataset
 
-You can download the LSUN dataset by cloning [this repo](https://github.com/fyu/lsun) and running
+You can download the LSUN dataset by cloning [this repo](https://github.com/fyu/lsun) 
+
+```
+git cllone https://github.com/fyu/lsun.git
+```
+and running
 ```
 python download.py -c bedroom
+```
+
+For testing and/or benchmarking purposes it is also possible to the train the model on fake dataset. To do this run this command instead of the one given in the Usage section:
+
+```
+CUDA_VISIBLE_DEVICES=0 python main.py --init-method tcp://127.0.0.1:20011 --rank 0 --world 2 --dataset fake --cuda
+CUDA_VISIBLE_DEVICES=1 python main.py --init-method tcp://127.0.0.1:20011 --rank 1 --world 2 --dataset fake --cuda
 ```
 
 ## Making the code parallel
