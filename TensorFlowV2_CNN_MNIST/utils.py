@@ -1,6 +1,5 @@
 import tensorflow as tf
 import tensorflow_datasets as tfds
-from absl import app, flags
 
 
 # Scaling MNIST data from (0, 255] to (0., 1.]
