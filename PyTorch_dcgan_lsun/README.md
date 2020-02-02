@@ -1,6 +1,6 @@
 # PyTorch - DCGAN
 
-This example is based on [this implementation](https://github.com/pytorch/examples/tree/master/dcgan)
+This example is based on [the PyTorch DCGAN example](https://github.com/pytorch/examples/tree/master/dcgan).
 ```
 git clone https://github.com/pytorch/examples.git
 ```
