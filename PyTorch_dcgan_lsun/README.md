@@ -17,7 +17,7 @@ and running
 python download.py -c bedroom
 ```
 
-For testing and/or benchmarking purposes it is also possible to the train the model on fake dataset. To do this run this command instead of the one given in the Usage section:
+For testing and/or benchmarking purposes it is also possible to the train the model on fake dataset. To do this, set the parameter `--dataset fake` when running the training program.
 
 ```
 CUDA_VISIBLE_DEVICES=0 python main.py --init-method tcp://127.0.0.1:20011 --rank 0 --world 2 --dataset fake --cuda
