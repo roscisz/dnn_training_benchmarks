@@ -3,6 +3,8 @@
 This example is based on [the PyTorch DCGAN example](https://github.com/pytorch/examples/tree/master/dcgan).
 ```
 git clone https://github.com/pytorch/examples.git
+cd examples/
+git checkout 0c1654d6913f77f09c0505fb284d977d89c17c1a
 ```
 
 ## Downloading the dataset
