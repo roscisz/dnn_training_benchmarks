@@ -7,7 +7,7 @@ git clone https://github.com/pytorch/examples.git
 
 ## Downloading the dataset
 
-You can download the LSUN dataset by cloning [this repo](https://github.com/fyu/lsun) 
+You can download the LSUN dataset by cloning [the LSUN Demo Code repo](https://github.com/fyu/lsun):
 
 ```
 git clone https://github.com/fyu/lsun.git
