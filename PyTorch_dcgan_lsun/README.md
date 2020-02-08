@@ -60,6 +60,7 @@ export GLOO_SOCKET_IFNAME=eth0
 
 ```
 cd dcgan/
+# Run the following commands simultaneously, on the appropriate hosts:
 CUDA_VISIBLE_DEVICES=0 python main.py --init-method tcp://127.0.0.1:20011 --rank 0 --world 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
 CUDA_VISIBLE_DEVICES=1 python main.py --init-method tcp://127.0.0.1:20011 --rank 1 --world 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
 
