@@ -1,5 +1,5 @@
 diff --git a/dcgan/main.py b/dcgan/main.py
-index 9d5369c..fed7c02 100644
+index 9d5369c..e71e1f0 100644
 --- a/dcgan/main.py
 +++ b/dcgan/main.py
 @@ -2,8 +2,8 @@ from __future__ import print_function
@@ -107,7 +107,7 @@ index 9d5369c..fed7c02 100644
                      normalize=True)
 -
 +            end = time.time()
-+            print("Time per 100 iterations: " + str(end - start))
++            print("Time per 100 iterations: " + round(str(end - start), 3) + " s")
 +            start = time.time()
      # do checkpointing
      torch.save(netG.state_dict(), '%s/netG_epoch_%d.pth' % (opt.outf, epoch))

@@ -5,6 +5,7 @@ This example is based on [the PyTorch DCGAN example](https://github.com/pytorch/
 git clone https://github.com/pytorch/examples.git
 cd examples/
 git checkout 0c1654d6913f77f09c0505fb284d977d89c17c1a
+pip install -r requirements.txt
 ```
 
 ## Downloading the dataset
@@ -19,12 +20,7 @@ and running
 python download.py -c bedroom
 ```
 
-For testing and/or benchmarking purposes it is also possible to the train the model on fake dataset. To do this, set the parameter `--dataset fake` when running the training program.
-
-```
-CUDA_VISIBLE_DEVICES=0 python main.py --init-method tcp://127.0.0.1:20011 --rank 0 --world 2 --dataset fake --cuda
-CUDA_VISIBLE_DEVICES=1 python main.py --init-method tcp://127.0.0.1:20011 --rank 1 --world 2 --dataset fake --cuda
-```
+For testing and/or benchmarking purposes it is also possible to the train the model on fake dataset. To do this, set the parameter `--dataset fake` when running the training program (ommit --dataroot parameter).
 
 ## Making the code parallel
 
