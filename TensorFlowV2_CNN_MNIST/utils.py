@@ -15,7 +15,7 @@ def prepare_train_datasets(batch_size):
                                with_info=True,
                                as_supervised=True)
     train_datasets_unbatched = datasets['train'].map(scale).shuffle(BUFFER_SIZE)
-    train_datasets = train_datasets_unbatched.batch(batch_size)
+    train_datasets = train_datasets_unbatched.repeat().batch(batch_size)
     return train_datasets
 
 
