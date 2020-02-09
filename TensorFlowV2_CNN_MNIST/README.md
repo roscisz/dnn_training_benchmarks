@@ -1,3 +1,4 @@
+
 # TensorFlow MNIST CNN
 
 This example shows distributed training of a simple convolutional model using the MNIST dataset.
@@ -21,6 +22,17 @@ cd dnn_training_benchmarks/TensorFlowV2_CNN_MNIST/
 **Install requirements**
 ```bash
 pip install -r requirements.txt
+```
+### Trainig parameters
+While running each of the example scripts you can adjust training settings by setting command line paramters:
+
+ - epochs
+ - batch_size
+ - steps_per_epoch
+
+Example:
+```bash
+ python train.py --batch_size=64 --epochs=5 --steps_per_epoch=500
 ```
 ## Single GPU
 Simple implementation, which will be used as a base for distributed examples.
