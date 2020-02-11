@@ -59,6 +59,6 @@ cd dcgan/
 # Run the following commands simultaneously, on the appropriate hosts:
 CUDA_VISIBLE_DEVICES=0 python main.py --init-method tcp://127.0.0.1:20011 --rank 0 --world-size 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
 CUDA_VISIBLE_DEVICES=1 python main.py --init-method tcp://127.0.0.1:20011 --rank 1 --world-size 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
-
-For more details about the usage refer to the [original repo](https://github.com/pytorch/examples/tree/master/dcgan)
 ```
+For more details about the usage refer to the [original repo](https://github.com/pytorch/examples/tree/master/dcgan)
+
