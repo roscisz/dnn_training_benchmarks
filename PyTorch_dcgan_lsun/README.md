@@ -3,7 +3,7 @@
 This example is based on [the PyTorch DCGAN example](https://github.com/pytorch/examples/tree/master/dcgan).
 ```
 git clone https://github.com/pytorch/examples.git
-cd examples/
+cd examples/dcgan/
 git checkout 0c1654d6913f77f09c0505fb284d977d89c17c1a
 pip install -r requirements.txt
 ```
@@ -61,4 +61,3 @@ CUDA_VISIBLE_DEVICES=0 python main.py --init-method tcp://127.0.0.1:20011 --rank
 CUDA_VISIBLE_DEVICES=1 python main.py --init-method tcp://127.0.0.1:20011 --rank 1 --world-size 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
 ```
 For more details about the usage refer to the [original repo](https://github.com/pytorch/examples/tree/master/dcgan)
-
