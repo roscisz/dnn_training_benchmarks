@@ -46,7 +46,6 @@ To make the code support distributed training, copy and apply the provided patch
 git apply distributed.patch
 ```
 
-You might want to checkout commit 0c1654d6913f77f09c0505fb284d977d89c17c1a to make sure there are no conflicts before applying the patch.
 
 To learn how to easily adapt PyTorch code for distributed learning please examine the patch. 
 
