@@ -40,7 +40,7 @@ That's it. After that you just control which GPUs you would like your code to ru
 
 ### Distributed
 
-To make the code distributed apply provided patch by running:
+To make the code support distributed training, copy and apply the provided patch:
 
 ```
 git apply distributed.patch
@@ -52,7 +52,7 @@ To learn how to easily adapt PyTorch code for distributed learning please examin
 
 ## Usage
 ```
-# set accroding to your configuration
+# set according to your configuration
 export GLOO_SOCKET_IFNAME=eth0 
 ```
 
