@@ -17,7 +17,9 @@ git clone https://github.com/fyu/lsun.git
 ```
 and running
 ```
+cd lsun/
 python download.py -c bedroom
+cd ..
 ```
 
 For testing and/or benchmarking purposes it is also possible to the train the model on fake dataset. To do this, set the parameter `--dataset fake` when running the training program (ommit --dataroot parameter).
