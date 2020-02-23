@@ -23,7 +23,7 @@ cd dnn_training_benchmarks/TensorFlowV2_CNN_MNIST/
 ```bash
 pip install -r requirements.txt
 ```
-### Trainig parameters
+### Training parameters
 While running each of the example scripts you can adjust training settings by setting command line paramters:
 
  - epochs
