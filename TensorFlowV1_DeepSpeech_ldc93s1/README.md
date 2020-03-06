@@ -1,6 +1,6 @@
 # DeepSpeech benchmarks
 
-Last time we checked if it still works: ![](https://img.shields.io/date/1577971959) ![](https://img.shields.io/badge/platform-x86_64-blue.svg)
+Last time we checked if it still works: ![](https://img.shields.io/date/1583517314) ![](https://img.shields.io/badge/platform-x86_64-blue.svg)
 
 In this example we provide experimental results and steps to reproduce for benchmarking performance of training the
 [Baidu's Deep Speech](https://arxiv.org/abs/1412.5567) Recurrent Neural Network for automatic speech recognition.
@@ -45,7 +45,7 @@ apt-get update
 apt-get install -y python3.6 python3-pip
 virtualenv -p python3.6 venv
 source venv/bin/activate
-pip install 'tensorflow-gpu==1.6.0' pandas python_speech_features pyxdg progressbar2 scipy
+pip install 'tensorflow-gpu==1.6.0' 'pandas==0.25.1' python_speech_features pyxdg progressbar2 scipy
 ```
 
 ### Installing DeepSpeech
