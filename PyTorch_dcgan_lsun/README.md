@@ -1,6 +1,8 @@
 # PyTorch - DCGAN
 
-This example is based on [the PyTorch DCGAN example](https://github.com/pytorch/examples/tree/master/dcgan).
+This example is based on [the PyTorch DCGAN example](https://github.com/pytorch/examples/tree/master/dcgan),
+which can be installed as follows:
+
 ```
 git clone https://github.com/pytorch/examples.git
 cd examples/dcgan/
@@ -22,11 +24,11 @@ python download.py -c bedroom
 cd ..
 ```
 
-For testing and/or benchmarking purposes it is also possible to the train the model on fake dataset. To do this, set the parameter `--dataset fake` when running the training program (ommit --dataroot parameter).
+For testing and/or benchmarking purposes it is also possible to the train the model on fake dataset. To do this, set the parameter `--dataset fake` when running the training program (omit the `--dataroot` parameter).
 
 ## Making the code parallel
 
-It is actually very easy to allow PyTorch code to run on multiple GPUs
+It is actually very easy to allow PyTorch code to run on multiple GPUs.
 
 ### Locally
 
@@ -60,4 +62,4 @@ export GLOO_SOCKET_IFNAME=eth0
 CUDA_VISIBLE_DEVICES=0 python main.py --init-method tcp://127.0.0.1:20011 --rank 0 --world-size 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
 CUDA_VISIBLE_DEVICES=1 python main.py --init-method tcp://127.0.0.1:20011 --rank 1 --world-size 2 --dataset lsun --dataroot <path to lsun dataset> --cuda
 ```
-For more details about the usage refer to the [original repo](https://github.com/pytorch/examples/tree/master/dcgan)
+For more details about the usage refer to the [original repo](https://github.com/pytorch/examples/tree/master/dcgan).
