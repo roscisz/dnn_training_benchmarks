@@ -193,21 +193,21 @@ are on a single node. If they would be on different ones we could use
 
 As expected, performance increases proportionally to batch size, up to a limit depending on GPU memory capacity:  
 
-![batch_size_v100](https://raw.githubusercontent.com/roscisz/TensorHive/master/examples/deepspeech/img/batch_size_v100.png)
-![batch_size_gtx1060](https://raw.githubusercontent.com/roscisz/TensorHive/master/examples/deepspeech/img/batch_size_gtx1060.png)
+![batch_size_v100](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_DeepSpeech_ldc93s1/img/batch_size_v100.png)
+![batch_size_gtx1060](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_DeepSpeech_ldc93s1/img/batch_size_gtx1060.png)
 
 Although using Distributed TensorFlow with Parameter Servers allows distributed training on multiple nodes, it
 should be noted that communication with the Parameter Server introduces significant overhead comparing to the
 in-graph replication method:  
 
-![batch_size_v100_distributed](https://raw.githubusercontent.com/roscisz/TensorHive/master/examples/deepspeech/img/batch_size_v100_distributed.png)
+![batch_size_v100_distributed](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_DeepSpeech_ldc93s1/img/batch_size_v100_distributed.png)
 
 ### MultiGPU scalability
 
 The following results show performance results on NVIDIA® DGX Station™, depending on the choice utilized GPUs. The
 results are marked with ID's of the used GPUs, for example '013' means that CUDA_VISIBLE_DEVICES was set to 0,1,3.
 
-![multigpu_128](https://raw.githubusercontent.com/roscisz/TensorHive/master/examples/deepspeech/img/multigpu_128.png)
+![multigpu_128](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_DeepSpeech_ldc93s1/img/multigpu_128.png)
 
 Interestingly, in the cases of utilizing two GPUs, it is significant which GPUs are used exactly. For example,
 combining GPUs 0 and 1 or 2 and 3 results in worse performance. This is probably connected with interconnects between
@@ -215,7 +215,7 @@ the GPUs.
 
 Overhead of the Distributed TensorFlow implementation is also visible in the multi-GPU setup:
 
-![multigpu_128_distributed](https://raw.githubusercontent.com/roscisz/TensorHive/master/examples/deepspeech/img/multigpu_128_distributed.png)
+![multigpu_128_distributed](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_DeepSpeech_ldc93s1/img/multigpu_128_distributed.png)
 
 The results show that in the investigated setup it is better to run many processes utilizing single GPUs than 
 to run one process utilizing multiple GPUs. 
