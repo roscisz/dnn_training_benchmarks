@@ -144,9 +144,9 @@ CUDA_VISIBLE_DEVICES=0 t2t-trainer --data_dir=$DATA_DIR --problem=$PROBLEM \
 
 ### Batch size
 
-![batch_size_v100](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_DeepSpeech_ldc93s1/img/bs_v100_single.png)
+![batch_size_v100](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_T2T-Transformer_English-German/img/bs_v100_single.png)
 TODO: repeat v100 tests when other GPUs, CPU and PCI are not used
-![batch_size_gtx1060](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_DeepSpeech_ldc93s1/img/bs_gtx1060_single.png)
+![batch_size_gtx1060](https://raw.githubusercontent.com/roscisz/dnn_training_benchmarks/master/TensorFlowV1_T2T-Transformer_English-German/img/bs_gtx1060_single.png)
 
 ## Kubernetes
 
