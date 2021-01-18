@@ -1,6 +1,6 @@
 # MSG-GAN benchmark using TensorFlowV2 Strategy and Fasion-MNIST dataset
 
-Last time we checked if it still works: ![](https://img.shields.io/date/1579778719) ![](https://img.shields.io/badge/platform-x86_64-blue.svg)
+Last time we checked if it still works: ![](https://img.shields.io/date/1608496500) ![](https://img.shields.io/badge/platform-x86_64-blue.svg)
 
 
 This example, based on the [TensorFlow 2.0 in Action blogpost](https://blog.paperspace.com/tensorflow-2-0-in-practice/),
